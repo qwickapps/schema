@@ -1,0 +1,62 @@
+name: QwickApps Schema
+description: >
+  Pure TypeScript schema system for data binding, CMS integration, and template
+  resolution. Provides class-based models with validation, transformation, and
+  Mustache template support for dynamic content management.
+
+type: schema-library
+category: data-modeling
+framework: typescript
+language: typescript
+
+architecture:
+  type: schema-system
+  components:
+    - data-models
+    - validation-system
+    - template-engine
+    - transformation-logic
+  patterns:
+    - class-transformer
+    - decorator-validation
+    - template-resolution
+
+dependencies:
+  runtime:
+    - class-transformer
+    - class-validator
+    - reflect-metadata
+    - mustache
+  development:
+    - tsup
+    - jest
+    - typescript
+
+integrations:
+  - validation-decorators
+  - template-system
+  - cms-integration
+
+capabilities:
+  - data-validation
+  - object-transformation
+  - template-resolution
+  - cms-binding
+  - type-safety
+
+outputs:
+  - dist/
+
+quality:
+  linting: eslint
+  formatting: implicit
+  testing: jest
+  coverage_threshold: 75
+  type_checking: typescript
+
+deployment:
+  type: npm-package
+  registry: npmjs
+
+status: released
+priority: high
