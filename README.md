@@ -4,11 +4,15 @@ Pure TypeScript schema system for data binding, CMS integration, and template re
 
 ## Features
 
-- **Type-Safe Schemas**: Define data models with validation and type safety
+- **Decorator-Based Models**: Define data models using TypeScript decorators (Pydantic-style)
+- **Validation Decorators**: `@Email`, `@Url`, `@Min`, `@Max`, `@MinLength`, `@MaxLength`, and more
+- **Schema Composition**: `partial()`, `pick()`, `omit()`, `extend()` methods for schema manipulation
+- **Type Inference**: `SchemaType<T>` for automatic TypeScript type extraction
+- **Cross-Field Validation**: `@Validate` decorator for class-level validation rules
+- **Transform Decorators**: `@Transform` for value transformation before validation
 - **Data Providers**: Abstract interface for CMS and data source integration
 - **Template Resolution**: Mustache template processing for dynamic content
 - **Schema Builders**: Fluent API for building complex schemas
-- **Zero Dependencies**: Pure TypeScript with no runtime dependencies
 
 ## Installation
 
@@ -18,7 +22,106 @@ npm install @qwickapps/schema
 
 ## Usage
 
-### Define a Schema
+### Decorator-Based Models (Recommended)
+
+Define data models using TypeScript decorators for a Pydantic-like experience:
+
+```typescript
+import {
+  Model, Schema, Field, Editor,
+  Email, Url, Min, Max, MinLength, Int,
+  Transform, Validate, SchemaType, FieldType
+} from '@qwickapps/schema';
+
+@Schema('User', '1.0.0')
+@Validate(
+  (data) => data.password === data.confirmPassword,
+  { message: 'Passwords must match', fields: ['confirmPassword'] }
+)
+class UserModel extends Model {
+  @Field({ required: true })
+  @Editor({ field_type: FieldType.EMAIL, label: 'Email', description: 'User email' })
+  @Transform((v) => v?.trim().toLowerCase())
+  @Email()
+  email!: string;
+
+  @Field({ required: true })
+  @MinLength(8, { message: 'Password must be at least 8 characters' })
+  password!: string;
+
+  @Field({ required: true })
+  confirmPassword!: string;
+
+  @Field({ required: false })
+  @Url()
+  website?: string;
+
+  @Field({ required: true })
+  @Min(0)
+  @Max(150)
+  @Int()
+  age!: number;
+}
+
+// Type inference - extract TypeScript type from model
+type UserData = SchemaType<UserModel>;
+// { email: string; password: string; confirmPassword: string; website?: string; age: number }
+
+// Validation
+const result = await UserModel.validate({
+  email: '  TEST@EXAMPLE.COM  ',  // Will be trimmed and lowercased
+  password: 'securepass',
+  confirmPassword: 'securepass',
+  age: 25
+});
+
+if (result.isValid) {
+  console.log('Valid!');
+} else {
+  console.log('Errors:', result.errors);
+}
+
+// Schema composition
+const UpdateUserSchema = UserModel.partial();     // All fields optional
+const PublicUserSchema = UserModel.pick('email', 'website');  // Only selected fields
+const CreateUserSchema = UserModel.omit('confirmPassword');   // Exclude fields
+const AdminUserSchema = UserModel.extend({        // Add new fields
+  permissions: { type: 'array', required: true }
+});
+```
+
+### Available Validators
+
+**String Validators:**
+- `@Email()` - Valid email address
+- `@Url()` - Valid HTTP/HTTPS URL
+- `@Uuid()` - Valid UUID v4
+- `@Regex(pattern)` - Match regex pattern
+- `@MinLength(n)` - Minimum string length
+- `@MaxLength(n)` - Maximum string length
+
+**Number Validators:**
+- `@Min(n)` - Minimum value
+- `@Max(n)` - Maximum value
+- `@Int()` - Must be an integer
+- `@Positive()` - Must be > 0
+- `@Negative()` - Must be < 0
+
+**Transform & Cross-Field:**
+- `@Transform(fn)` - Transform value before validation
+- `@Validate(fn, opts)` - Class-level cross-field validation
+
+### Validation Order
+
+Validation runs in this order:
+1. Transforms applied
+2. Required field checks
+3. `@Editor.validation` constraints
+4. Field validators (`@Email`, `@Min`, etc.)
+5. `class-validator` decorators (if using)
+6. Cross-field validators (`@Validate`)
+
+### JSON Schema Definition (Alternative)
 
 ```typescript
 import { Schema, DataType, FieldType } from '@qwickapps/schema';

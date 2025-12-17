@@ -100,6 +100,35 @@ export type SchemaProps<T> = Partial<SchemaShape<T>>;
 export type SchemaData<T> = SchemaShape<T>;
 
 /**
+ * Alias for SchemaData - infer TypeScript type from a decorated class.
+ *
+ * Inspired by Zod's z.infer<typeof schema>, this provides automatic
+ * type inference from your decorated model classes.
+ *
+ * When to use:
+ *   - Extract plain object type from a Model class
+ *   - Avoid duplicating type definitions
+ *   - Type function parameters/returns based on schema
+ *
+ * Example:
+ *   @Schema('User')
+ *   class UserModel extends Model {
+ *     @Field({ required: true })
+ *     @Email()
+ *     email!: string;
+ *
+ *     @Field({ required: false })
+ *     name?: string;
+ *   }
+ *
+ *   type UserData = SchemaType<UserModel>;
+ *   // { email: string; name?: string }
+ *
+ *   function createUser(data: SchemaType<UserModel>) { ... }
+ */
+export type SchemaType<T> = SchemaData<T>;
+
+/**
  * Partial of SchemaData (e.g., patch/update operations).
  *
  * Example:

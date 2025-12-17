@@ -14,6 +14,7 @@ This document describes the architecture for data modeling, validation, and meta
 ### 1. Base Model Class
 
 All data models extend an abstract `Model` base class, which provides static methods for:
+
 - Validating data against decorator metadata
 - Retrieving schema metadata for UI, admin, or codegen
 
@@ -28,6 +29,7 @@ abstract class Model {
 ### 2. Decorators for Field Metadata
 
 The `@Field` decorator collects metadata for each property, including:
+
 - Required/optional status
 - Default value
 - Editor configuration (for UI)

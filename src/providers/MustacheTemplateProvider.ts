@@ -33,7 +33,7 @@ export class MustacheTemplateProvider implements TemplateProvider {
    */
   constructor(public max_passes: number = 1) {
     // Configure mustache for security - escape HTML by default
-    Mustache.escape = (text) => {
+    Mustache.escape = (text: string) => {
       return text
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')

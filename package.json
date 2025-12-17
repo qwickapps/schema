@@ -1,6 +1,6 @@
 {
   "name": "@qwickapps/schema",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "Pure TypeScript schema system for data binding, CMS integration, and template resolution",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -39,6 +39,7 @@
   "devDependencies": {
     "@swc/core": "^1.13.5",
     "@types/jest": "^29.5.5",
+    "@types/mustache": "^4.2.6",
     "@types/node": "^20.10.0",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",

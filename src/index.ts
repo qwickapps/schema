@@ -15,7 +15,7 @@ export * from './decorators';
 
 // Base Model class
 export { Model } from './models/Model';
-export type { ValidationResult } from './models/Model';
+export type { ValidationResult, CompositionFieldDef } from './models/Model';
 
 // Type utilities
 export * from './types/ModelProps';
@@ -43,6 +43,15 @@ export type {
 } from './decorators';
 
 export type {
-  SchemaProps, OptionalSchemaData, PartialSchemaData,
+  SchemaProps, SchemaType, OptionalSchemaData, PartialSchemaData,
   RequiredSchemaData
 } from './types';
+
+// Validator decorator types
+export type {
+  ValidatorType,
+  ValidatorMetadata,
+  ValidatorOptions,
+  TransformMetadata,
+  ClassValidatorMetadata
+} from './decorators';

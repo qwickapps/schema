@@ -116,3 +116,38 @@ export function Schema(nameOrOptions: string | SchemaMetadata, version?: string)
     return constructor;
   };
 }
+
+// Re-export validator types
+export type {
+  ValidatorType,
+  ValidatorMetadata,
+  ValidatorOptions,
+  TransformMetadata,
+  ClassValidatorMetadata
+} from './validators';
+
+// Re-export validator decorators and utilities
+export {
+  // String validators
+  Email,
+  Url,
+  Uuid,
+  Regex,
+  MinLength,
+  MaxLength,
+  // Number validators
+  Min,
+  Max,
+  Int,
+  Positive,
+  Negative,
+  // Transform
+  Transform,
+  // Cross-field validator
+  Validate,
+  // Utilities
+  validateValue,
+  applyTransforms,
+  runValidators,
+  runClassValidators
+} from './validators';
